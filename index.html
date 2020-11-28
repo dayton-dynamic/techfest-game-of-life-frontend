@@ -1,10 +1,39 @@
-<html>
+<!doctype html>
+
+<html lang="en">
+
 <head>
-    <script src="game.js">
-    </script>
+    <meta charset="utf-8">
+
+    <title>Conway's Game of Life / Dayton Dynamic Languages</title>
+    <meta name="description" content="Conway's Game of Life">
+    <meta name="author" content="Dayton Dynamic Languages user group">
+
+    <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
+
 </head>
+
 <body>
-<table id="gameboard" >
-</table>
+    <script src="setup.js"></script>
+    <script src="controls.js"></script>
+    <script src="game.js"></script>
+    <script>
+        function start_game() {
+            start_pattern = read_pattern();
+            // upload the pattern
+            play();
+        }
+        window.onload = setup_game
+    </script>
+
+    <table id="gameboard">
+    </table>
+
 </body>
-</html> 
+<button type="button" onclick="start_game()">
+    Start
+</button>
+
+</body>
+
+</html>

@@ -63,17 +63,16 @@ class Pattern {
 
 
     static from_table(tbl) {
+        let result = new Pattern();
         let bool_rows = [];
-        for (row of tbl.rows) {
-            width = row.length;
+        for (const row of tbl.rows) {
+            result.width = row.length;
             let characters = "0b";
-            for (cell of row.cells) {
+            for (const cell of row.cells) {
                 characters += cell.innerHTML;
             }
             bool_rows.push(Number(characters))
         }
-        result = Pattern();
-        result.width = row.length;
         result.bool_rows = bool_rows;
         return result
     }
@@ -87,5 +86,13 @@ class Pattern {
             row_num++
         }
     }
+}
+
+function save() {
+    new_pattern = Pattern.from_table(document.getElementById("gameboard"));
+    new_pattern.author = prompt("Your name?")
+    new_pattern.name = prompt("This pattern's name?")
+    // save to webservice
+    // reroute to gallery
 }
 

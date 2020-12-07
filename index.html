@@ -14,23 +14,28 @@
 </head>
 
 <body>
-    <script src="setup.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script src="pattern.js"></script>
     <script src="controls.js"></script>
     <script src="game.js"></script>
+    <script src="setup.js"></script>
     <script>
-        function start_game() {
-            start_pattern = read_pattern();
-            // upload the pattern
-            play();
+        function on_load() {
+
+            pattern_num = get_pattern_num();
+            pattern = Pattern.load(pattern_num);
+            let tbl = document.getElementById("gameboard") 
+            pattern.new_table(tbl)
+            pattern.apply(tbl) 
         }
-        window.onload = setup_game
+        window.onload = on_load
     </script>
 
     <table id="gameboard">
     </table>
 
 </body>
-<button type="button" onclick="start_game()">
+<button type="button" onclick="play()">
     Start
 </button>
 

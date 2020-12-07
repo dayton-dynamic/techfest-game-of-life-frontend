@@ -6,14 +6,14 @@ function get_pattern_num() {
 }
 
 DEFAULT_PATTERN = [
-    "00000000",
-    "00000000",
-    "00000000",
-    "00000000",
-    "00000000",
-    "00000000",
-    "00000000",
-    "00000000",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
+    "◦◦◦◦◦◦◦◦",
 ]
 
 function get_pattern_spec(pattern_num) {
@@ -25,11 +25,11 @@ function get_pattern_spec(pattern_num) {
 }
 
 function toggle(cell) {
-    if (cell.innerHTML == "0") {
-        cell.innerHTML = "1";
+    if (cell.innerHTML == "◦") {
+        cell.innerHTML = "•";
     }
     else {
-        cell.innerHTML = "0";
+        cell.innerHTML = "◦";
     }
 }
 

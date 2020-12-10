@@ -19,8 +19,8 @@ class Pattern {
 
     static default_pattern() {
         let result = new Pattern();
-        result.width = 8 
-        result.author = "Dayton Dynamic Languages" 
+        result.width = 16
+        result.author = "Dayton Dynamic Languages"
         result.name = "Default start pattern"
         result.bool_rows = [0, 0, 0, 0, 0, 0, 0, 0]
         return result;
@@ -86,12 +86,34 @@ class Pattern {
             row_num++
         }
     }
+
+    get payload() {
+        return {
+            "author": this.author,
+            "rows": this.bool_rows,
+        }
+    }
 }
 
 function save() {
     new_pattern = Pattern.from_table(document.getElementById("gameboard"));
     new_pattern.author = prompt("Your name?")
-    new_pattern.name = prompt("This pattern's name?")
+    console.log(new_pattern.payload);
+    let url = "http://45.79.202.219:3000/pattern"
+
+    const userAction = async () => {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: new_pattern.payload,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log(response)
+    }
+
+
     // save to webservice
     // reroute to gallery
 }

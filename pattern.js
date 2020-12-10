@@ -95,7 +95,8 @@ class Pattern {
     get payload() {
         return {
             "author": this.author,
-            "rows": this.bool_rows,
+            "pattern": this.bool_rows,
+            "width": this.width
         }
     }
 }
@@ -106,20 +107,13 @@ function save() {
     console.log(new_pattern.payload);
     let url = "http://45.79.202.219:3000/pattern"
 
-    const userAction = async () => {
-        const response = await fetch(url, {
-            method: 'POST',
-            body: new_pattern.payload,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const myJson = await response.json(); //extract JSON from the http response
-        console.log(response)
+    const options = {
+        method: 'POST',
+        // body: JSON.stringify(new_pattern.payload),
+        body: JSON.stringify(new_pattern.payload),
+        headers: {"Content-type": "application/json; charset=UTF-8"} 
     }
 
-
-    // save to webservice
-    // reroute to gallery
+    fetch(url, options).then(res => console.log(res));
 }
 

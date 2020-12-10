@@ -1,3 +1,5 @@
+let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
+
 function get_pattern_num() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -6,12 +8,13 @@ function get_pattern_num() {
 }
 
 function toggle(cell) {
-    if (cell.innerHTML == "0") {
-        cell.innerHTML = "1";
+    if (cell.alive == 0) {
+        cell.alive = 1;
     }
     else {
-        cell.innerHTML = "0";
+        cell.alive = 0;
     }
+    cell.innerHTML = icons[cell.alive];
 }
 
 
@@ -69,7 +72,7 @@ class Pattern {
             result.width = row.length;
             let characters = "0b";
             for (const cell of row.cells) {
-                characters += cell.innerHTML;
+                characters += String(cell.alive);
             }
             bool_rows.push(Number(characters))
         }
@@ -81,7 +84,9 @@ class Pattern {
         let row_num = 0;
         for (const row of this.rows) {  // try leaving off this bracket!
             for (let char_num = 0; char_num < row.length; char_num++) {
-                tbl.rows[row_num].cells[char_num].innerHTML = row[char_num]
+                let cell = tbl.rows[row_num].cells[char_num]
+                cell.alive = Number(row[char_num]);
+                cell.innerHTML = icons[cell.alive]
             }
             row_num++
         }

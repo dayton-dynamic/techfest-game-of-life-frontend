@@ -1,4 +1,5 @@
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
+let start_pattern = null;
 
 function get_pattern_num() {
     const queryString = window.location.search;
@@ -102,15 +103,16 @@ class Pattern {
 }
 
 function save() {
-    new_pattern = Pattern.from_table(document.getElementById("gameboard"));
-    new_pattern.author = prompt("Your name?")
-    console.log(new_pattern.payload);
+    if (!start_pattern) {
+      start_pattern = Pattern.from_table(document.getElementById("gameboard"));
+    }
+    start_pattern.author = prompt("Your name?")
+    console.log(start_pattern.payload);
     let url = "http://45.79.202.219:3000/pattern"
 
     const options = {
         method: 'POST',
-        // body: JSON.stringify(new_pattern.payload),
-        body: JSON.stringify(new_pattern.payload),
+        body: JSON.stringify(start_pattern.payload),
         headers: {"Content-type": "application/json; charset=UTF-8"} 
     }
 

@@ -26,7 +26,7 @@ class Pattern {
         result.width = 16
         result.author = "Dayton Dynamic Languages"
         result.name = "Default start pattern"
-        result.bool_rows = [0, 0, 0, 0, 0, 0, 0, 0]
+        result.rows_as_integers = [0, 0, 0, 0, 0, 0, 0, 0]
         return result;
     }
 
@@ -42,10 +42,10 @@ class Pattern {
     }
 
     get rows() {
-        // translates the bool_rows into 011001 string representation
+        // translates the rows_as_integers into 011001 string representation
 
         let result = []
-        for (const bool_row of this.bool_rows) {
+        for (const bool_row of this.rows_as_integers) {
             result.push(bool_row.toString(2).padStart(this.width, '0'))
         }
         return result
@@ -68,16 +68,16 @@ class Pattern {
 
     static from_table(tbl) {
         let result = new Pattern();
-        let bool_rows = [];
+        let rows_as_integers = [];
         for (const row of tbl.rows) {
             result.width = row.length;
             let characters = "0b";
             for (const cell of row.cells) {
                 characters += String(cell.alive);
             }
-            bool_rows.push(Number(characters))
+            rows_as_integers.push(Number(characters))
         }
-        result.bool_rows = bool_rows;
+        result.rows_as_integers = rows_as_integers;
         return result
     }
 
@@ -96,7 +96,7 @@ class Pattern {
     get payload() {
         return {
             "author": this.author,
-            "pattern": this.bool_rows,
+            "pattern": this.rows_as_integers,
             "width": this.width
         }
     }
@@ -104,7 +104,7 @@ class Pattern {
 
 function save() {
     if (!start_pattern) {
-      start_pattern = Pattern.from_table(document.getElementById("gameboard"));
+        start_pattern = Pattern.from_table(document.getElementById("gameboard"));
     }
     start_pattern.author = prompt("Your name?")
     console.log(start_pattern.payload);
@@ -113,7 +113,7 @@ function save() {
     const options = {
         method: 'POST',
         body: JSON.stringify(start_pattern.payload),
-        headers: {"Content-type": "application/json; charset=UTF-8"} 
+        headers: { "Content-type": "application/json; charset=UTF-8" }
     }
 
     fetch(url, options).then(res => console.log(res));

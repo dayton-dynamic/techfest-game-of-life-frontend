@@ -1,6 +1,8 @@
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let start_pattern = null;
 
+const url = "http://45.79.202.219:3000/pattern"
+
 function get_pattern_num() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -34,7 +36,23 @@ class Pattern {
         if (!pattern_num) {
             return Pattern.default_pattern();
         }
-        return Pattern.default_pattern();  // replace me
+
+        console.log(`pattern_num is ${pattern_num}`)
+        let result = new Pattern();
+
+        fetch(`${url}?id=eq.${pattern_num}`)
+            .then(response => response.json())
+            .then(data => { 
+                console.log('wooo');
+                // let result = new Pattern();
+                result.author = data['author'];
+                result.name = `pattern ${pattern_num}`
+                result.rows_as_integers = data['pattern'];
+                console.log(`rows_as_integers set to ${result.rows_as_integers}`);
+            }) 
+
+        console.log(`outer rows_as_integers ${result.rows_as_integers}`);
+        return result;
     }
 
     static random() {
@@ -53,7 +71,6 @@ class Pattern {
 
     new_table(tbl) {
         tbl.innerHTML = "";
-        // $(`"#${tbl.id} tr`).remove();  requires jquery
         for (const row_values of this.rows) {
             let row = tbl.insertRow();
             for (const cell_value of row_values) {
@@ -82,8 +99,9 @@ class Pattern {
     }
 
     apply(tbl) {
+        console.log(`Now applying pattern ${this.name}`);
         let row_num = 0;
-        for (const row of this.rows) {  // try leaving off this bracket!
+        for (const row of this.rows) {  
             for (let char_num = 0; char_num < row.length; char_num++) {
                 let cell = tbl.rows[row_num].cells[char_num]
                 cell.alive = Number(row[char_num]);
@@ -108,7 +126,6 @@ function save() {
     }
     start_pattern.author = prompt("Your name?")
     console.log(start_pattern.payload);
-    let url = "http://45.79.202.219:3000/pattern"
 
     const options = {
         method: 'POST',
@@ -117,5 +134,21 @@ function save() {
     }
 
     fetch(url, options).then(res => console.log(res));
+}
+
+
+
+function fill_list(game_list) {
+
+    function add_li(row, index) {
+        var li = document.createElement('li');
+        game_list.append(li);
+        li.innerHTML = `<a href="index.html?pattern=${row['id']}">${row['author']}</a>`; 
+        console.log(row);
+    }
+
+    fetch(url).then(response => response.json())
+        .then(data => data.forEach(add_li));
+
 }
 

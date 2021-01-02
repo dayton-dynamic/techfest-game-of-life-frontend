@@ -5,8 +5,8 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Conway's Game of Life / Dayton Dynamic Languages</title>
-    <meta name="description" content="Conway's Game of Life">
+    <title>Gallery: Conway's Game of Life / Dayton Dynamic Languages</title>
+    <meta name="description" content="Conway's Game of Life gallery">
     <meta name="author" content="Dayton Dynamic Languages user group">
 
     <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
@@ -21,27 +21,13 @@
     <script src="setup.js"></script>
     <script>
         function on_load() {
-
-            pattern_num = get_pattern_num();
-            pattern = Pattern.load(pattern_num);
-            let tbl = document.getElementById("gameboard")
-            pattern.new_table(tbl)
-            pattern.apply(tbl)
+            let game_list = document.getElementById("game-list")
+            fill_list(game_list)
         }
         window.onload = on_load
     </script>
 
-    <table id="gameboard">
-    </table>
-
-<button type="button" onclick="play()">
-    Start
-</button>
-
-<button type="button" onclick="save()">
-    Save
-</button>
-
+    <ul id="game-list"></ul>
 
 </body>
 

@@ -11,32 +11,27 @@
 
     <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
 
+    <!-- script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script -->
+    <script src="pattern.js"></script>
+    <!-- script src="controls.js"></script -->
+    <script src="game.js"></script>
+    <script src="setup.js"></script>
+
 </head>
 
 <body>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-    <script src="pattern.js"></script>
-    <script src="controls.js"></script>
-    <script src="game.js"></script>
-    <script src="setup.js"></script>
-    <script>
-        function on_load() {
-
-            pattern_num = get_pattern_num();
-            pattern = Pattern.load(pattern_num);
-            let tbl = document.getElementById("gameboard")
-            pattern.new_table(tbl)
-            pattern.apply(tbl)
-        }
-        window.onload = on_load
-    </script>
 
     <table id="gameboard">
     </table>
 
 </body>
-<button type="button" onclick="play()">
+
+<button type="button" id="start">
     Start
+</button>
+
+<button type="button" id="stop" disabled>
+    Stop
 </button>
 
 <button type="button" onclick="save()">

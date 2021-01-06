@@ -1,110 +1,158 @@
-let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
-let start_pattern = null;
-
-function get_pattern_num() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    var pattern_num = (urlParams.get("pattern"));
-    return pattern_num;
-}
-
-function toggle(cell) {
-    if (cell.alive == 0) {
-        cell.alive = 1;
-    }
-    else {
-        cell.alive = 0;
-    }
-    cell.innerHTML = icons[cell.alive];
-}
-
-
 class Pattern {
 
-    static default_pattern() {
+    static defaultPattern() {
         let result = new Pattern();
-        result.width = 16
-        result.author = "Dayton Dynamic Languages"
-        result.name = "Default start pattern"
-        result.bool_rows = [0, 0, 0, 0, 0, 0, 0, 0]
+        result.width = 16;
+        result.height = 16;
+        result.author = "Dayton Dynamic Languages";
+        result.name = "Default start pattern";
+        let boolRows = [];
+        for (let i = 0; i < result.width; i++) { boolRows.push(0); };
+        result.boolRows = [...boolRows];
         return result;
     }
 
-    static load(pattern_num) {
-        if (!pattern_num) {
-            return Pattern.default_pattern();
+    static load(patternNumm) {
+        if (!patternNumm) {
+            return Pattern.defaultPattern();
         }
-        return Pattern.default_pattern();  // replace me
+        return Pattern.defaultPattern();  // replace me
     }
 
     static random() {
-        return default_pattern();  //replace me
+        return defaultPattern();  //replace me
     }
 
     get rows() {
-        // translates the bool_rows into 011001 string representation
+        // translates the boolRows into 011001 string representation
 
         let result = []
-        for (const bool_row of this.bool_rows) {
-            result.push(bool_row.toString(2).padStart(this.width, '0'))
+        for (const boolRow of this.boolRows) {
+            result.push(boolRow.toString(2).padStart(this.width, '0'))
         }
         return result
     }
 
+    countNeighbors(rowNum, colNum) {
+
+        // Get cells in an aray of arrays
+        let cells = [];
+        for (const row of this.rows) {
+            cells.push([...row].map(x => Number(x)));
+        }
+
+        let neighbors = 0;
+
+        // Check all the adjacent cells
+        for (let i = rowNum - 1; i <= rowNum + 1; i++) {
+            if ((i < 0) || (i > this.height - 1)) continue;
+            for (let j = colNum - 1; j <= colNum + 1; j++) {
+                if ((j < 0) || (j > this.width - 1)) continue;
+                if (i === rowNum && j === colNum) continue;
+                if (cells[i][j] === 1) {
+                    neighbors++;
+                }
+            }
+        }
+        return neighbors;
+    }
+
     new_table(tbl) {
+        tbl.pattern = this;
         tbl.innerHTML = "";
-        // $(`"#${tbl.id} tr`).remove();  requires jquery
         for (const row_values of this.rows) {
             let row = tbl.insertRow();
             for (const cell_value of row_values) {
                 let cell = row.insertCell(-1);
-                cell.onclick = function () {
-                    toggle(cell);
-                }
+                cell.addEventListener("click", function() {
+                    toggle(this);
+                    let table = this.closest("table");
+                    table.pattern.update(table);
+                })
             }
         }
     }
 
-
-    static from_table(tbl) {
-        let result = new Pattern();
-        let bool_rows = [];
+    update(tbl) {
+        let boolRows = [];
         for (const row of tbl.rows) {
-            result.width = row.length;
             let characters = "0b";
             for (const cell of row.cells) {
                 characters += String(cell.alive);
             }
-            bool_rows.push(Number(characters))
+            boolRows.push(Number(characters))
         }
-        result.bool_rows = bool_rows;
-        return result
+        this.boolRows = boolRows;
     }
 
-    apply(tbl) {
-        let row_num = 0;
-        for (const row of this.rows) {  // try leaving off this bracket!
-            for (let char_num = 0; char_num < row.length; char_num++) {
-                let cell = tbl.rows[row_num].cells[char_num]
-                cell.alive = Number(row[char_num]);
-                cell.innerHTML = icons[cell.alive]
-            }
-            row_num++
+    static from_table(tbl) {
+    let result = new Pattern();
+    let boolRows = [];
+    for (const row of tbl.rows) {
+        result.width = row.length;
+        let characters = "0b";
+        for (const cell of row.cells) {
+            characters += String(cell.alive);
         }
+        boolRows.push(Number(characters))
+    }
+    result.boolRows = boolRows;
+    return result
+}
+
+apply(tbl) {
+    let row_num = 0;
+    for (const row of this.rows) {  // try leaving off this bracket!
+        for (let char_num = 0; char_num < row.length; char_num++) {
+            let cell = tbl.rows[row_num].cells[char_num]
+            cell.alive = Number(row[char_num]);
+            cell.innerHTML = icons[cell.alive];
+        }
+        row_num++
+    }
+}
+
+advance(tbl) {
+    // Get cells in an aray of arrays
+    let cells = [];
+    for (const row of this.rows) {
+        cells.push([...row].map(x => Number(x)));
     }
 
-    get payload() {
-        return {
-            "author": this.author,
-            "pattern": this.bool_rows,
-            "width": this.width
+    // Deternine new cell values
+    let rowNum = 0;
+    for (const row of cells) {
+        let colNum = 0;
+        for (const column of row) {
+            let status = cells[rowNum][colNum];
+            let neighbors = this.countNeighbors(rowNum, colNum);
+            cells[rowNum][colNum] = rules[status][neighbors];
+            colNum++;
         }
+        rowNum++;
     }
+
+    // Write cells array back to boolRows
+    this.boolRows = [];
+    for (const row of cells) {
+        let characters = "0b" + row.join("");
+        this.boolRows.push(Number(characters));
+    }
+}
+
+
+get payload() {
+    return {
+        "author": this.author,
+        "pattern": this.boolRows,
+        "width": this.width
+    }
+}
 }
 
 function save() {
     if (!start_pattern) {
-      start_pattern = Pattern.from_table(document.getElementById("gameboard"));
+        start_pattern = Pattern.from_table(document.getElementById("gameboard"));
     }
     start_pattern.author = prompt("Your name?")
     console.log(start_pattern.payload);
@@ -113,7 +161,7 @@ function save() {
     const options = {
         method: 'POST',
         body: JSON.stringify(start_pattern.payload),
-        headers: {"Content-type": "application/json; charset=UTF-8"} 
+        headers: { "Content-type": "application/json; charset=UTF-8" }
     }
 
     fetch(url, options).then(res => console.log(res));

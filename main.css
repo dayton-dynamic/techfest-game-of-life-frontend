@@ -1,0 +1,15 @@
+table#gameboard {
+    background-color: #555555;
+}
+table#gameboard tr {
+    height: 20px;
+}
+table#gameboard td {
+    background-color: black;
+    color: black;
+    width: 20px;
+}
+table#gameboard td.alive {
+    background-color: yellow;
+    color: yellow;
+}

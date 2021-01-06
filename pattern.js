@@ -106,6 +106,11 @@ apply(tbl) {
         for (let char_num = 0; char_num < row.length; char_num++) {
             let cell = tbl.rows[row_num].cells[char_num]
             cell.alive = Number(row[char_num]);
+            if((cell.alive == 1)) {
+                cell.className = "alive"
+            } else {
+                cell.className = "empty"
+            }
             cell.innerHTML = icons[cell.alive];
         }
         row_num++

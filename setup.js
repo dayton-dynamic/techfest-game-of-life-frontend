@@ -8,9 +8,11 @@ function getPatternNum() {
 function toggle(cell) {
     if (cell.alive == 0) {
         cell.alive = 1;
+        cell.className = "alive";
     }
     else {
         cell.alive = 0;
+        cell.className = "empty";
     }
     cell.innerHTML = icons[cell.alive];
 }

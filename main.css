@@ -1,15 +1,87 @@
+body {
+    background-color: rgb(135, 209, 222);
+}
+div.move-left {
+    display: inline-block;
+    width: 50%;
+    float: left;
+    /*
+    background-color: crimson;
+    */
+}
+div.move-right {
+    display: inline-block;
+    width: 50%;
+    float: right;
+    /*
+    background-color: crimson;
+    */
+}
+div.move-left:after, div.move-right:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+h1 {
+    display: block;
+    text-align: center;
+    font-size: 300%;
+    font-family: 'Londrina Solid', cursive;
+}
+.supertitle {
+    font-size: 70%;
+}
 table#gameboard {
+    float:right;
+    margin: 10px;
     background-color: #555555;
+    border: solid 7px;
+    border-color: #003399;
+    border-radius: 7px;
 }
 table#gameboard tr {
     height: 20px;
 }
 table#gameboard td {
+    width: 20px;
+    padding: 0px;
     background-color: black;
     color: black;
-    width: 20px;
+    font-size: 0px;
 }
 table#gameboard td.alive {
     background-color: yellow;
     color: yellow;
+}
+div.button-panel {
+    display: block;
+    background-color: #003399;
+    margin: 10px;
+    padding: 10px;
+    border: solid black 2px;
+    border-radius: 7px;
+}
+div.button-panel:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+button {
+    width: 5em;
+    border-style: solid;
+    border-width: 4px;
+    border-color: black;
+    border-radius: 7px;
+    font-size: 35px;
+    margin: 10px;
+    float: left;
+    display: 10px;
+}
+button:hover {
+    background-color: yellow;
+}
+button:disabled {
+    border-color: #cccccc;
+    color: #cccccc;
 }

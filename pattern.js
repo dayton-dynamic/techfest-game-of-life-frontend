@@ -2,8 +2,8 @@ class Pattern {
 
     static defaultPattern() {
         let result = new Pattern();
-        result.width = 16;
-        result.height = 16;
+        result.width = 25;
+        result.height = 25;
         result.author = "Dayton Dynamic Languages";
         result.name = "Default start pattern";
         let boolRows = [];

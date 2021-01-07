@@ -46,13 +46,19 @@ window.addEventListener("load", function(){
             pattern.apply(tbl);
         }, interval);
         document.querySelector("#stop").disabled = false;
+        document.querySelector("#step").disabled = true;
         this.disabled = true;
     });
     document.querySelector("#stop").addEventListener("click", function() {
         running = false;
         clearInterval(runner);
         document.querySelector("#start").disabled = false;
+        document.querySelector("#step").disabled = false;
         this.disabled = true;
+    });
+    document.querySelector("#step").addEventListener("click", function() {
+        pattern.advance(tbl);
+        pattern.apply(tbl);
     });
 });
 

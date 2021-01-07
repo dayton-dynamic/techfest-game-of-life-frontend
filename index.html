@@ -15,28 +15,32 @@
     <script src="pattern.js"></script>
     <!-- script src="controls.js"></script -->
     <script src="setup.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet"> 
 
 </head>
 
 <body>
 
-    <table id="gameboard">
-    </table>
+    <div class="move-left">
+        <h1><span class="supertitle">John Conway's</span><br />Game of Life</h1>
+    </div>
 
-</body>
+    <div class="move-right">
+        <table id="gameboard"></table>
+    </div>
 
-<button type="button" id="start">
-    Start
-</button>
-
-<button type="button" id="stop" disabled>
-    Stop
-</button>
-
-<button type="button" onclick="save()">
-    Save
-</button>
-
+    <div class="move-left">
+        <div class="button-panel">
+            <button type="button" id="start">Start</button>
+            <button type="button" id="stop" disabled>Stop</button>
+            <button type="button" id="step">Step</button>
+        </div>
+        <div class="button-panel">
+            <button type="button" id="reset" disabled>Reset</button>
+            <button type="button" onclick="save()">Save</button>
+        </div>
+    </div>
 
 </body>
 

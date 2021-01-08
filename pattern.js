@@ -73,6 +73,17 @@ class Pattern {
         }
     }
 
+    new_thumb(tbl) {
+        tbl.pattern = this;
+        tbl.innerHTML = "";
+        for (const row_values of this.rows) {
+            let row = tbl.insertRow();
+            for (const cell_value of row_values) {
+                let cell = row.insertCell(-1);
+            }
+        }
+    }
+
     update(tbl) {
         let boolRows = [];
         for (const row of tbl.rows) {
@@ -86,73 +97,74 @@ class Pattern {
     }
 
     static from_table(tbl) {
-    let result = new Pattern();
-    let boolRows = [];
-    for (const row of tbl.rows) {
-        result.width = row.length;
-        let characters = "0b";
-        for (const cell of row.cells) {
-            characters += String(cell.alive);
-        }
-        boolRows.push(Number(characters))
-    }
-    result.boolRows = boolRows;
-    return result
-}
-
-apply(tbl) {
-    let row_num = 0;
-    for (const row of this.rows) {  // try leaving off this bracket!
-        for (let char_num = 0; char_num < row.length; char_num++) {
-            let cell = tbl.rows[row_num].cells[char_num]
-            cell.alive = Number(row[char_num]);
-            if((cell.alive == 1)) {
-                cell.className = "alive"
-            } else {
-                cell.className = "empty"
+        let result = new Pattern();
+        let boolRows = [];
+        for (const row of tbl.rows) {
+            result.width = row.length;
+            let characters = "0b";
+            for (const cell of row.cells) {
+                characters += String(cell.alive);
             }
-            cell.innerHTML = icons[cell.alive];
+            boolRows.push(Number(characters))
         }
-        row_num++
-    }
-}
-
-advance(tbl) {
-    // Get cells in an aray of arrays
-    let cells = [];
-    for (const row of this.rows) {
-        cells.push([...row].map(x => Number(x)));
+        result.boolRows = boolRows;
+        return result
     }
 
-    // Deternine new cell values
-    let rowNum = 0;
-    for (const row of cells) {
-        let colNum = 0;
-        for (const column of row) {
-            let status = cells[rowNum][colNum];
-            let neighbors = this.countNeighbors(rowNum, colNum);
-            cells[rowNum][colNum] = rules[status][neighbors];
-            colNum++;
+
+    apply(tbl) {
+        let row_num = 0;
+        for (const row of this.rows) {  // try leaving off this bracket!
+            for (let char_num = 0; char_num < row.length; char_num++) {
+                let cell = tbl.rows[row_num].cells[char_num]
+                cell.alive = Number(row[char_num]);
+                if((cell.alive == 1)) {
+                    cell.className = "alive"
+                } else {
+                    cell.className = "empty"
+                }
+                cell.innerHTML = icons[cell.alive];
+            }
+            row_num++
         }
-        rowNum++;
     }
 
-    // Write cells array back to boolRows
-    this.boolRows = [];
-    for (const row of cells) {
-        let characters = "0b" + row.join("");
-        this.boolRows.push(Number(characters));
+    advance(tbl) {
+        // Get cells in an aray of arrays
+        let cells = [];
+        for (const row of this.rows) {
+            cells.push([...row].map(x => Number(x)));
+        }
+
+        // Deternine new cell values
+        let rowNum = 0;
+        for (const row of cells) {
+            let colNum = 0;
+            for (const column of row) {
+                let status = cells[rowNum][colNum];
+                let neighbors = this.countNeighbors(rowNum, colNum);
+                cells[rowNum][colNum] = rules[status][neighbors];
+                colNum++;
+            }
+            rowNum++;
+        }
+
+        // Write cells array back to boolRows
+        this.boolRows = [];
+        for (const row of cells) {
+            let characters = "0b" + row.join("");
+            this.boolRows.push(Number(characters));
+        }
     }
-}
 
 
-get payload() {
-    return {
-        "author": this.author,
-        "pattern": this.boolRows,
-        "width": this.width
+    get payload() {
+        return {
+            "author": this.author,
+            "pattern": this.boolRows,
+            "width": this.width
+        }
     }
-}
 }
 
 function save() {

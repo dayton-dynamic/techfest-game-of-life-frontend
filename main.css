@@ -32,25 +32,39 @@ h1 {
 .supertitle {
     font-size: 70%;
 }
-table#gameboard {
-    float:right;
+table#gameboard, table#thumbnail{
     margin: 10px;
     background-color: #555555;
     border: solid 7px;
     border-color: #003399;
     border-radius: 7px;
 }
+table#gameboard {
+    float: right;
+}
+table#thumbnail {
+    display: inline;
+    float: left;
+}
 table#gameboard tr {
     height: 20px;
 }
-table#gameboard td {
-    width: 20px;
+table#thumbnail tr {
+    height: 4px;
+}
+table#gameboard td, table#thumbnail td {
     padding: 0px;
     background-color: black;
     color: black;
     font-size: 0px;
 }
-table#gameboard td.alive {
+table#gameboard td {
+    width: 20px;
+}
+table#thumbnail td {
+    width: 4px;
+}
+table#gameboard td.alive, table#thumbnail td.alive {
     background-color: yellow;
     color: yellow;
 }
@@ -78,10 +92,13 @@ button {
     float: left;
     display: 10px;
 }
-button:hover {
+button:enabled:hover {
     background-color: yellow;
 }
 button:disabled {
     border-color: #cccccc;
     color: #cccccc;
+}
+button:disabled:hover {
+    background-color: white;
 }

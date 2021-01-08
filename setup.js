@@ -28,7 +28,7 @@ let rules = [
     [0, 0, 0, 1, 1, 1, 1, 1, 1], // Empty cells with 3 or more neighbors come to life
     [0, 0, 1, 1, 0, 0, 0, 0, 0]  // Living cells survive if they have 2-3 neighbors
 ];
-let startPattern = null;
+let startPattern = {};
 let running = false;
 let runner; // Interval timer
 let interval = 500; // Interval time
@@ -36,10 +36,19 @@ let interval = 500; // Interval time
 window.addEventListener("load", function(){
     patternNum = getPatternNum();
     pattern = Pattern.load(patternNum);
+    startPattern = Pattern.defaultPattern();
+    startPattern.width = pattern.width;
+    startPattern.height = pattern.height;
+    startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
     let tbl = document.querySelector("#gameboard");
+    let thumb = document.querySelector("#thumbnail");
     pattern.new_table(tbl);
+    startPattern.new_thumb(thumb);
     pattern.apply(tbl);
     document.querySelector("#start").addEventListener("click", function() {
+        startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
+        //startPattern.new_thumb(thumb);
+        startPattern.apply(thumb);
         running = true;
         runner = setInterval(() => {
             pattern.advance(tbl);

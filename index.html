@@ -32,14 +32,24 @@
 
     <div class="move-left">
         <div class="button-panel">
+            <h2>Play</h2>
             <button type="button" id="start">Start</button>
             <button type="button" id="stop" disabled>Stop</button>
             <button type="button" id="step">Step</button>
         </div>
         <div class="button-panel">
-            <button type="button" id="reset" disabled>Reset</button>
-            <table id="thumbnail"></table>
-            <button type="button" onclick="save()">Save</button>
+            <h2>Starting Pattern</h2>
+            <div class="startPatternThumb">
+                <table id="startPattern" class="thumbnail"></table>
+            </div>
+                <div class="button-set">
+                <button type="button" id="reset" disabled>Reset</button>
+                <button type="button" id="clear" disabled>Clear</button>
+            </div>
+            <div class="button-set">
+                <button type="button" id="save">Save</button>
+                <button type="button" id="load">Load</button>
+            </div>
         </div>
     </div>
 

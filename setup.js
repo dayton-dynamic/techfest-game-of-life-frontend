@@ -41,13 +41,12 @@ window.addEventListener("load", function(){
     startPattern.height = pattern.height;
     startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
     let tbl = document.querySelector("#gameboard");
-    let thumb = document.querySelector("#thumbnail");
+    let thumb = document.querySelector("#startPattern");
     pattern.new_table(tbl);
     startPattern.new_thumb(thumb);
     pattern.apply(tbl);
     document.querySelector("#start").addEventListener("click", function() {
         startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
-        //startPattern.new_thumb(thumb);
         startPattern.apply(thumb);
         running = true;
         runner = setInterval(() => {
@@ -56,6 +55,7 @@ window.addEventListener("load", function(){
         }, interval);
         document.querySelector("#stop").disabled = false;
         document.querySelector("#step").disabled = true;
+        document.querySelector("#reset").disabled = true;
         this.disabled = true;
     });
     document.querySelector("#stop").addEventListener("click", function() {
@@ -63,10 +63,15 @@ window.addEventListener("load", function(){
         clearInterval(runner);
         document.querySelector("#start").disabled = false;
         document.querySelector("#step").disabled = false;
+        document.querySelector("#reset").disabled = false;
         this.disabled = true;
     });
     document.querySelector("#step").addEventListener("click", function() {
         pattern.advance(tbl);
+        pattern.apply(tbl);
+    });
+    document.querySelector("#reset").addEventListener("click", function() {
+        pattern.boolRows = JSON.parse(JSON.stringify(startPattern.boolRows));
         pattern.apply(tbl);
     });
 });

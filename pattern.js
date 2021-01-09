@@ -67,7 +67,7 @@ class Pattern {
                 cell.addEventListener("click", function() {
                     toggle(this);
                     let table = this.closest("table");
-                    table.pattern.update(table);
+                    table.pattern.updateFromTable(table);
                 })
             }
         }
@@ -84,7 +84,7 @@ class Pattern {
         }
     }
 
-    update(tbl) {
+    updateFromTable(tbl) {
         let boolRows = [];
         for (const row of tbl.rows) {
             let characters = "0b";

@@ -7,7 +7,7 @@ class Pattern {
         result.author = "Dayton Dynamic Languages";
         result.name = "Default start pattern";
         let boolRows = [];
-        for (let i = 0; i < result.width; i++) { boolRows.push(0); };
+        for (let i = 0; i < result.height; i++) { boolRows.push(0); };
         result.boolRows = [...boolRows];
         return result;
     }
@@ -96,6 +96,12 @@ class Pattern {
         this.boolRows = boolRows;
     }
 
+    clear() {
+        let boolRows = [];
+        for (let i = 0; i < this.height; i++) { boolRows.push(0); };
+        this.boolRows = [...boolRows];
+    }
+
     static from_table(tbl) {
         let result = new Pattern();
         let boolRows = [];
@@ -168,16 +174,16 @@ class Pattern {
 }
 
 function save() {
-    if (!start_pattern) {
-        start_pattern = Pattern.from_table(document.getElementById("gameboard"));
+    if (!startPattern) {
+        startPattern = Pattern.from_table(document.getElementById("gameboard"));
     }
-    start_pattern.author = prompt("Your name?")
-    console.log(start_pattern.payload);
+    startPattern.author = prompt("Your name?")
+    console.log(startPattern.payload);
     let url = "http://45.79.202.219:3000/pattern"
 
     const options = {
         method: 'POST',
-        body: JSON.stringify(start_pattern.payload),
+        body: JSON.stringify(startPattern.payload),
         headers: { "Content-type": "application/json; charset=UTF-8" }
     }
 

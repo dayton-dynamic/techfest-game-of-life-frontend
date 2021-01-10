@@ -1,21 +1,16 @@
 body {
     background-color: rgb(135, 209, 222);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 div.move-left {
     display: inline-block;
     width: 50%;
     float: left;
-    /*
-    background-color: crimson;
-    */
 }
 div.move-right {
     display: inline-block;
     width: 50%;
     float: right;
-    /*
-    background-color: crimson;
-    */
 }
 div.move-left:after, div.move-right:after {
     content: "";
@@ -25,6 +20,8 @@ div.move-left:after, div.move-right:after {
 
 h1 {
     display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
     text-align: center;
     font-size: 300%;
     font-family: 'Londrina Solid', cursive;
@@ -40,11 +37,12 @@ h2 {
     font-size: 200%;
     color: yellow;
 }
+.presented {
+    margin-bottom: 0px;
+    text-align: center;
+}
 table#gameboard, table.thumbnail{
-    background-color: red;
     border-collapse: collapse;
-     /* Smooth outline with box-shadow: */
-
 }
 table#gameboard {
     float: right;

@@ -56,6 +56,9 @@ window.addEventListener("load", function(){
         document.querySelector("#stop").disabled = false;
         document.querySelector("#step").disabled = true;
         document.querySelector("#reset").disabled = true;
+        document.querySelector("#clear").disabled = true;
+        document.querySelector("#save").disabled = true;
+        document.querySelector("#load").disabled = true;
         this.disabled = true;
     });
     document.querySelector("#stop").addEventListener("click", function() {
@@ -64,6 +67,9 @@ window.addEventListener("load", function(){
         document.querySelector("#start").disabled = false;
         document.querySelector("#step").disabled = false;
         document.querySelector("#reset").disabled = false;
+        document.querySelector("#clear").disabled = false;
+        document.querySelector("#save").disabled = false;
+        document.querySelector("#load").disabled = false;
         this.disabled = true;
     });
     document.querySelector("#step").addEventListener("click", function() {
@@ -73,6 +79,12 @@ window.addEventListener("load", function(){
     document.querySelector("#reset").addEventListener("click", function() {
         pattern.boolRows = JSON.parse(JSON.stringify(startPattern.boolRows));
         pattern.apply(tbl);
+    });
+    document.querySelector("#clear").addEventListener("click", function() {
+        pattern.clear();
+        pattern.apply(tbl);
+        startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
+        startPattern.apply(thumb);
     });
 });
 

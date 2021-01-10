@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(135, 209, 222);
+    background-color: #99ccff;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 div.move-left {
@@ -31,9 +31,9 @@ h1 {
 }
 h2 {
     display: block;
-    margin: 0px;
+    margin: 0px 10px;
     padding: none;
-    text-align: center;
+    text-align: left;
     font-size: 200%;
     color: yellow;
 }
@@ -45,8 +45,11 @@ table#gameboard, table.thumbnail{
     border-collapse: collapse;
 }
 table#gameboard {
+    /*
     float: right;
-    margin: 20px;
+    */
+    margin: auto;
+    margin-top: 30px;
     box-shadow: 0px 0px 16px 16px #ffffff;
 }
 table.thumbnail {
@@ -94,6 +97,10 @@ div.button-panel:after {
     display: table;
     clear: both;
 }
+div.button-panel p {
+    margin: 5px 10px;
+    color: yellow;
+}
 div.button-set {
     float: left;
     width: 33%;
@@ -125,6 +132,12 @@ button {
     float: left;
     display: 10px;
 }
+button#rules, button#download {
+    width: auto;
+    height: auto;
+    padding: 3px 6px;
+    font-size: 20px;
+}
 button:enabled:hover {
     background-color: yellow;
 }
@@ -147,8 +160,9 @@ button:disabled:hover {
 div.modal {
     width: 70%;
     height: auto;
-    margin-left: 15%;
+    left:10%;
     margin-top: 30px;
+    padding: 20px 40px;
     background-color: #99ccff;
     border: 2px solid #cccccc;
     border-radius: 7px;
@@ -156,6 +170,13 @@ div.modal {
     z-index: 1000005;
     box-shadow: 20px 20px 40px 1px black;
     display: none;
+}
+div.modal h2 {
+    color:#003399;
+    margin: 10px 10px;
+}
+div.modal p {
+    margin: 5px 10px;
 }
 form {
     padding: 20px;

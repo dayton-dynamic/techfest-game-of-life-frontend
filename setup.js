@@ -94,6 +94,10 @@ window.addEventListener("load", function(){
         document.querySelector("#page-mask").style.display = "block";
         document.querySelector("#load-dialog").style.display = "block";
     });
+    document.querySelector("#rules").addEventListener("click", function() {
+        document.querySelector("#page-mask").style.display = "block";
+        document.querySelector("#rules-dialog").style.display = "block";
+    });
     document.querySelector("#save-submit").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#save-dialog").style.display = "none";
@@ -109,6 +113,10 @@ window.addEventListener("load", function(){
     document.querySelector("#load-cancel").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#load-dialog").style.display = "none";
+    });
+    document.querySelector("#rules-close").addEventListener("click", function() {
+        document.querySelector("#page-mask").style.display = "none";
+        document.querySelector("#rules-dialog").style.display = "none";
     });
 
 });

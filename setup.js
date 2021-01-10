@@ -95,12 +95,20 @@ window.addEventListener("load", function(){
         document.querySelector("#load-dialog").style.display = "block";
     });
     document.querySelector("#save-submit").addEventListener("click", function() {
-        document.querySelector("#page-mask").style.isplay = "none";
+        document.querySelector("#page-mask").style.display = "none";
+        document.querySelector("#save-dialog").style.display = "none";
+    });
+    document.querySelector("#save-cancel").addEventListener("click", function() {
+        document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#save-dialog").style.display = "none";
     });
     document.querySelector("#load-submit").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";
-        document.querySelector("#load-dialog").style.display = "block";
+        document.querySelector("#load-dialog").style.display = "none";
+    });
+    document.querySelector("#load-cancel").addEventListener("click", function() {
+        document.querySelector("#page-mask").style.display = "none";
+        document.querySelector("#load-dialog").style.display = "none";
     });
 
 });

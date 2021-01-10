@@ -45,13 +45,42 @@
             </div>
                 <div class="button-set">
                 <button type="button" id="reset" disabled>Reset</button>
-                <button type="button" id="clear">Clear</button>
+                <button type="button" id="clear" disabled>Clear</button>
             </div>
             <div class="button-set">
-                <button type="button" id="save">Save</button>
+                <button type="button" id="save" disabled>Save</button>
                 <button type="button" id="load">Load</button>
             </div>
         </div>
+    </div>
+    <div id="page-mask"></div>
+    <div id="save-dialog" class="modal">
+        <h1>Save a Pattern</h1>
+        <form id="load-form">
+            <label for="pattern-name">Name for this pattern:</label>
+            <input name="pattern-name" id="pattern-name" type="text"><br>
+            <label for="author">Author first name:</label>
+            <input name="athor" id="author" type="text"><br>
+            <fieldset form="load-form"><legend>Save to where?</legend>
+                <input type="radio" id="local" name="location" value="local">
+                <label for="local">Local (on your computer or phone)</label><br>
+                <input type="radio" id="shared" name="location" value="shared">
+                <label for="shared">Shared withother users</label><br>
+            </fieldset>
+            <button id="saveSubmit" type="submit">Save</button>
+        </form>
+    </div>
+    <div id="load-dialog" class="modal">
+        <h1>Load a Pattern</h1>
+        <form id="load-form">
+            <fieldset form="load-form"><legend>Load from where?</legend>
+                <input type="radio" id="local" name="location" value="local">
+                <label for="local">Local (on your computer or phone)</label><br>
+                <input type="radio" id="shared" name="location" value="shared">
+                <label for="shared">Shared withother users</label><br>
+            </fieldset>
+            <button id="loadSubmit" type="submit">Load</button>
+        </form>
     </div>
 
 </body>

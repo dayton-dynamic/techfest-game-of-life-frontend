@@ -114,12 +114,13 @@ div.startPatternThumb:after {
 }
 button {
     height: 2.5ex;
-    width: 5em;
+    width: 5.5em;
     border-style: solid;
     border-width: 4px;
     border-color: black;
     border-radius: 7px;
-    font-size: 35px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 30px;
     margin: 10px;
     float: left;
     display: 10px;
@@ -133,4 +134,49 @@ button:disabled {
 }
 button:disabled:hover {
     background-color: white;
+}
+#page-mask {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+}
+div.modal {
+    width: 70%;
+    height: auto;
+    margin-left: 15%;
+    margin-top: 30px;
+    background-color: #99ccff;
+    border: 2px solid #cccccc;
+    border-radius: 7px;
+    position: fixed;
+    z-index: 1000005;
+    box-shadow: 20px 20px 40px 1px black;
+    display: none;
+}
+form {
+    padding: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 30px;
+}
+input {
+    margin-top: 20px;
+    border: solid 1px;
+    border-color: black ;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 30px;
+}
+input:hover{
+    box-shadow:inset 0px 0px 2px 2px #666666;
+}
+input:focus{
+    box-shadow:inset 0px 0px 0px 3px black;
+}
+fieldset {
+    margin-top: 20px;
+    border: solid 1px;
+    border-color: black;
 }

@@ -17,34 +17,32 @@ function toggle(cell) {
     cell.innerHTML = icons[cell.alive];
 }
 
-function setup_game() {
-    patterNum = getPatternNum();
-    pattern = Pattern.load(patternNum);
-    pattern.apply(document.querySelector("#gameboard"));
-}
-
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let rules = [
     [0, 0, 0, 1, 1, 1, 1, 1, 1], // Empty cells with 3 or more neighbors come to life
     [0, 0, 1, 1, 0, 0, 0, 0, 0]  // Living cells survive if they have 2-3 neighbors
 ];
+let pattern = {};
 let startPattern = {};
 let running = false;
 let runner; // Interval timer
 let interval = 500; // Interval time
 
+patternNum = getPatternNum();
+pattern = Pattern.load(patternNum);
+startPattern = Pattern.defaultPattern();
+startPattern.width = pattern.width;
+startPattern.height = pattern.height;
+startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
+
 window.addEventListener("load", function(){
-    patternNum = getPatternNum();
-    pattern = Pattern.load(patternNum);
-    startPattern = Pattern.defaultPattern();
-    startPattern.width = pattern.width;
-    startPattern.height = pattern.height;
-    startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
     let tbl = document.querySelector("#gameboard");
-    let thumb = document.querySelector("#startPattern");
     pattern.new_table(tbl);
-    startPattern.new_thumb(thumb);
     pattern.apply(tbl);
+    let thumb = document.querySelector("#startPattern");
+    startPattern.new_thumb(thumb);
+
+    // Attach event listeners to the buttons on the main screen
     document.querySelector("#start").addEventListener("click", function() {
         startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
         startPattern.apply(thumb);
@@ -85,6 +83,9 @@ window.addEventListener("load", function(){
         pattern.apply(tbl);
         startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
         startPattern.apply(thumb);
+        document.querySelector("#reset").disabled = true;
+        document.querySelector("#clear").disabled = true;
+        document.querySelector("#save").disabled = true;
     });
     document.querySelector("#save").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "block";
@@ -98,6 +99,8 @@ window.addEventListener("load", function(){
         document.querySelector("#page-mask").style.display = "block";
         document.querySelector("#rules-dialog").style.display = "block";
     });
+
+    // Attach event listeners to the buttons on the Save dialog
     document.querySelector("#save-submit").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#save-dialog").style.display = "none";
@@ -106,6 +109,8 @@ window.addEventListener("load", function(){
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#save-dialog").style.display = "none";
     });
+
+    // Attach event listeners to the buttons on the Load dialog
     document.querySelector("#load-submit").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#load-dialog").style.display = "none";
@@ -114,6 +119,8 @@ window.addEventListener("load", function(){
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#load-dialog").style.display = "none";
     });
+
+    // Attach event listeners to the buttons on the Rules dialog
     document.querySelector("#rules-close").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";
         document.querySelector("#rules-dialog").style.display = "none";

@@ -1,5 +1,5 @@
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
-let start_pattern = null;
+let pattern_at_playtime = null;
 const default_width = 16;
 
 const url = "http://45.79.202.219:3000/pattern"
@@ -38,7 +38,7 @@ class Pattern {
         if (!pattern_num) {
             // console.log(`pattern_num ${pattern_num} is falsey`)
             let pattern = Pattern.default_pattern();
-            start_pattern = null;
+            pattern_at_playtime = null;
             pattern.new_table(tbl);
             pattern.apply(tbl);
             return;
@@ -57,7 +57,7 @@ class Pattern {
                 pattern.rows_as_integers = row['pattern'];
                 pattern.new_table(tbl);
                 pattern.apply(tbl);
-                start_pattern = pattern;
+                pattern_at_playtime = null;
             }) 
     }
 
@@ -84,6 +84,7 @@ class Pattern {
                 let cell = row.insertCell(-1);
                 cell.onclick = function () {
                     toggle(cell);
+                    pattern_at_playtime = null;
                 }
             }
         }
@@ -128,17 +129,17 @@ class Pattern {
 }
 
 function save() {
-    console.log(`start pattern is ${JSON.stringify(start_pattern)}`);
-    if (!start_pattern) {
+    console.log(`start pattern is ${JSON.stringify(pattern_at_playtime)}`);
+    if (!pattern_at_playtime) {  // todo: or if play has not been hit
         console.log("no start pattern");
-        start_pattern = Pattern.from_table(document.getElementById("gameboard"));
+        pattern_at_playtime = Pattern.from_table(document.getElementById("gameboard"));
     }
-    start_pattern.author = prompt("Your name?")
-    console.log(start_pattern.payload);
+    pattern_at_playtime.author = prompt("Your name?")
+    console.log(pattern_at_playtime.payload);
 
     const options = {
         method: 'POST',
-        body: JSON.stringify(start_pattern.payload),
+        body: JSON.stringify(pattern_at_playtime.payload),
         headers: { "Content-type": "application/json; charset=UTF-8" }
     }
 

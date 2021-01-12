@@ -23,10 +23,10 @@
         function on_load() {
 
             pattern_num = get_pattern_num();
-            pattern = Pattern.load(pattern_num);
             let tbl = document.getElementById("gameboard")
-            pattern.new_table(tbl)
-            pattern.apply(tbl)
+            Pattern.load(pattern_num, tbl);
+            // pattern.new_table(tbl)
+            // pattern.apply(tbl)
         }
         window.onload = on_load
     </script>

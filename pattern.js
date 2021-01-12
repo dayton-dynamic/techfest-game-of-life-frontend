@@ -1,5 +1,6 @@
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let start_pattern = null;
+const default_width = 16;
 
 const url = "http://45.79.202.219:3000/pattern"
 
@@ -25,34 +26,39 @@ class Pattern {
 
     static default_pattern() {
         let result = new Pattern();
-        result.width = 16
+        result.width = default_width;
         result.author = "Dayton Dynamic Languages"
         result.name = "Default start pattern"
         result.rows_as_integers = [0, 0, 0, 0, 0, 0, 0, 0]
         return result;
     }
 
-    static load(pattern_num) {
+    static load(pattern_num, tbl) {
+        console.log(`pattern_num ${pattern_num}`)
         if (!pattern_num) {
-            return Pattern.default_pattern();
+            // console.log(`pattern_num ${pattern_num} is falsey`)
+            let pattern = Pattern.default_pattern();
+            start_pattern = null;
+            pattern.new_table(tbl);
+            pattern.apply(tbl);
+            return;
         }
 
-        console.log(`pattern_num is ${pattern_num}`)
-        let result = new Pattern();
-
+        // async madness
         fetch(`${url}?id=eq.${pattern_num}`)
             .then(response => response.json())
             .then(data => { 
-                console.log('wooo');
-                // let result = new Pattern();
-                result.author = data['author'];
-                result.name = `pattern ${pattern_num}`
-                result.rows_as_integers = data['pattern'];
-                console.log(`rows_as_integers set to ${result.rows_as_integers}`);
+                console.log(`data ${JSON.stringify(data)}`)
+                let row = data[0];
+                let pattern = new Pattern();
+                pattern.author = row['author'];
+                pattern.name = `pattern ${pattern_num}`
+                pattern.width = default_width;
+                pattern.rows_as_integers = row['pattern'];
+                pattern.new_table(tbl);
+                pattern.apply(tbl);
+                start_pattern = pattern;
             }) 
-
-        console.log(`outer rows_as_integers ${result.rows_as_integers}`);
-        return result;
     }
 
     static random() {
@@ -61,6 +67,7 @@ class Pattern {
 
     get rows() {
         // translates the rows_as_integers into 011001 string representation
+        console.log(`this is ${JSON.stringify(this)}`);
 
         let result = []
         for (const bool_row of this.rows_as_integers) {
@@ -121,7 +128,9 @@ class Pattern {
 }
 
 function save() {
+    console.log(`start pattern is ${JSON.stringify(start_pattern)}`);
     if (!start_pattern) {
+        console.log("no start pattern");
         start_pattern = Pattern.from_table(document.getElementById("gameboard"));
     }
     start_pattern.author = prompt("Your name?")
@@ -132,6 +141,9 @@ function save() {
         body: JSON.stringify(start_pattern.payload),
         headers: { "Content-type": "application/json; charset=UTF-8" }
     }
+
+    console.log("saving");
+    console.log(JSON.stringify(options))
 
     fetch(url, options).then(res => console.log(res));
 }

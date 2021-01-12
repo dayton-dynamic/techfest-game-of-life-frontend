@@ -62,28 +62,29 @@
     <div id="page-mask"></div>
     <div id="save-dialog" class="modal">
         <h1>Save a Pattern</h1>
-        <form id="load-form">
+        <form id="save-form">
             <label for="pattern-name">Name for this pattern:</label>
             <input name="pattern-name" id="pattern-name" type="text"><br>
             <label for="author">Author first name:</label>
             <input name="athor" id="author" type="text"><br>
-            <fieldset form="load-form"><legend>Save to where?</legend>
-                <input type="radio" id="local" name="location" value="local">
+            <fieldset form="save-form"><legend>Save to where?</legend>
+                <input type="radio" id="local" name="destination" value="local" checked>
                 <label for="local">Local (on your computer or phone)</label><br>
-                <input type="radio" id="shared" name="location" value="shared">
+                <input type="radio" id="shared" name="destination" value="shared">
                 <label for="shared">Online Library (shared with other users)</label><br>
             </fieldset>
             <button id="save-submit" type="button">Save</button>
             <button id="save-cancel" type="button">Cancel</button>
+            <p id="save-message" class="error"></p>
         </form>
     </div>
     <div id="load-dialog" class="modal">
         <h1>Load a Pattern</h1>
         <form id="load-form">
             <fieldset form="load-form"><legend>Load from where?</legend>
-                <input type="radio" id="local" name="location" value="local">
+                <input type="radio" id="local" name="source" value="local" checked>
                 <label for="local">Local (on your computer or phone)</label><br>
-                <input type="radio" id="shared" name="location" value="shared">
+                <input type="radio" id="shared" name="source" value="shared">
                 <label for="shared">Online Library (shared with other users)</label><br>
             </fieldset>
             <button id="load-submit" type="button">Load</button>

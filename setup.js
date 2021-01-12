@@ -17,6 +17,15 @@ function toggle(cell) {
     cell.innerHTML = icons[cell.alive];
 }
 
+function save(pattern, destination) {
+    if (destination == "local") {
+        alert("Saving local");
+    }
+    else {
+        alert("Saving remote");
+    }
+}
+
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let rules = [
     [0, 0, 0, 1, 1, 1, 1, 1, 1], // Empty cells with 3 or more neighbors come to life
@@ -27,6 +36,10 @@ let startPattern = {};
 let running = false;
 let runner; // Interval timer
 let interval = 500; // Interval time
+let nameRE = /^[a-zA-Z0-9][a-zA-Z0-9\s]{1,19}$/;
+let authorRE = /^[a-zA-Z][a-zA-Z\s]{1,19}$/;
+let nameInvalid = "The Pattern Name must be 2 to 20 characters (letters, numbers or spaces).";
+let authorInvalid = "The Author First Name must be 2 to 20 characters (letters or spaces).";
 
 patternNum = getPatternNum();
 pattern = Pattern.load(patternNum);
@@ -88,6 +101,9 @@ window.addEventListener("load", function(){
         document.querySelector("#save").disabled = true;
     });
     document.querySelector("#save").addEventListener("click", function() {
+        document.querySelector("#save-message").innerHTML = "";
+        document.querySelector("#pattern-name").value = pattern.name;
+        document.querySelector("#author").value = pattern.author;
         document.querySelector("#page-mask").style.display = "block";
         document.querySelector("#save-dialog").style.display = "block";
     });
@@ -102,8 +118,28 @@ window.addEventListener("load", function(){
 
     // Attach event listeners to the buttons on the Save dialog
     document.querySelector("#save-submit").addEventListener("click", function() {
-        document.querySelector("#page-mask").style.display = "none";
-        document.querySelector("#save-dialog").style.display = "none";
+        let name = document.querySelector("#pattern-name").value.trim();
+        let author = document.querySelector("#author").value.trim();
+        let message = document.querySelector("#save-message");
+        let destination = document.querySelector('input[name="destination"]:checked').value;
+        message.innerHTML = "";
+        if (!nameRE.test(name)) {
+            message.innerHTML = nameInvalid;
+        }
+        else {
+            pattern.name = name;
+        }
+        if (!authorRE.test(author)) {
+            message.innerHTML = authorInvalid;
+        }
+        else {
+            pattern.author = author;
+        }
+        if (!(message.innerHTML)) {
+            save(pattern, destination);
+            document.querySelector("#page-mask").style.display = "none";
+            document.querySelector("#save-dialog").style.display = "none";
+        }
     });
     document.querySelector("#save-cancel").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";

@@ -9,39 +9,39 @@
     <meta name="description" content="Conway's Game of Life">
     <meta name="author" content="Dayton Dynamic Languages user group">
 
-    <!-- link rel="stylesheet" href="css/styles.css?v=1.0"-->
+    <link rel="stylesheet" type="text/css" href="main.css" media = screen>
+
+    <!-- script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script -->
+    <script src="pattern.js"></script>
+    <!-- script src="controls.js"></script -->
+    <script src="setup.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet"> 
 
 </head>
 
 <body>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-    <script src="pattern.js"></script>
-    <script src="controls.js"></script>
-    <script src="game.js"></script>
-    <script src="setup.js"></script>
-    <script>
-        function on_load() {
 
-            pattern_num = get_pattern_num();
-            let tbl = document.getElementById("gameboard")
-            Pattern.load(pattern_num, tbl);
-            // pattern.new_table(tbl)
-            // pattern.apply(tbl)
-        }
-        window.onload = on_load
-    </script>
+    <div class="move-left">
+        <h1><span class="supertitle">John Conway's</span><br />Game of Life</h1>
+    </div>
 
-    <table id="gameboard">
-    </table>
+    <div class="move-right">
+        <table id="gameboard"></table>
+    </div>
 
-<button type="button" onclick="play()">
-    Start
-</button>
-
-<button type="button" onclick="save()">
-    Save
-</button>
-
+    <div class="move-left">
+        <div class="button-panel">
+            <button type="button" id="start">Start</button>
+            <button type="button" id="stop" disabled>Stop</button>
+            <button type="button" id="step">Step</button>
+        </div>
+        <div class="button-panel">
+            <button type="button" id="reset" disabled>Reset</button>
+            <table id="thumbnail"></table>
+            <button type="button" onclick="save()">Save</button>
+        </div>
+    </div>
 
 </body>
 

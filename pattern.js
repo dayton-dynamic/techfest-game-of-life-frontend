@@ -1,3 +1,4 @@
+let url = "http://45.79.202.219:3000/pattern"
 class Pattern {
 
     static setToDefaults(pattern) {
@@ -24,14 +25,15 @@ class Pattern {
             fetch(`${url}?id=eq.${patternNumm}`)
                 .then(response => response.json())
                 .then(data => { 
-                    console.log(`data ${JSON.stringify(data)}`)
+                    console.log(`Got pattern data from API: ${JSON.stringify(data)}`)
                     let row = data[0];
                     pattern.author = row['author'];
                     pattern.name = `pattern ${patternNumm}`
-                    pattern.width = default_width;
-                    pattern.rows_as_integers = row['pattern'];
+                    pattern.width = row['width']
+                    pattern.boolRows = row['pattern'];
                     pattern.new_table(tbl);
                     pattern.apply(tbl);
+                    console.log("Finished setting pattern attributes from API")
                 }) 
         }
 
@@ -200,18 +202,9 @@ function save() {
         headers: { "Content-type": "application/json; charset=UTF-8" }
     }
 
-    fetch(url, options).then(res => console.log(res));
+    fetch(url, options).then(res => window.location.href="gallery.html"); 
+    // console.log("POST result: " + res));
+    // console.log("redirecting now");
+    // window.location.href="gallery.html";
 }
 
-function fill_ul(game_list) {
-
-    function add_li(row, index) {
-        var li = document.createElement('li');
-        game_list.append(li);
-        li.innerHTML = `<a href="index.html?pattern=${row['id']}">${row['author']}</a>`; 
-        console.log(row);
-    }
-
-    fetch(url).then(response => response.json())
-        .then(data => data.forEach(add_li));
-}

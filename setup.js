@@ -29,23 +29,21 @@ let interval = 500; // Interval time
 
 window.addEventListener("load", function(){
     patternNum = getPatternNum();
-    let tbl = document.querySelector("#gameboard");
+    // let tbl = document.querySelector("#gameboard");
+    let tbl = document.getElementById("gameboard")
+    console.log("tbl found from document: " + JSON.stringify(tbl));
     pattern = Pattern.load(patternNum, tbl);
-    console.log(pattern);
-    console.log(JSON.stringify(pattern));
-    console.log(pattern.new_thumb);
     // startPattern = Object.assign({}, pattern);
     startPattern = new Pattern();
+    // problem: when we are loading, all these may not yet 
+    // be set in pattern
+    console.log("Setting up startPattern");
     startPattern.width = pattern.width;
     startPattern.height = pattern.height;
     startPattern.author = pattern.author;
     startPattern.name = pattern.name;
     startPattern.boolRows = pattern.boolRows.slice();
 
-    console.log(startPattern);
-    console.log(JSON.stringify(startPattern));
-    console.log(startPattern.new_thumb);
-    // startPattern = { ...pattern };  // TODO: again hosed by async!
     let thumb = document.querySelector("#thumbnail");
     startPattern.new_thumb(thumb);
     document.querySelector("#start").addEventListener("click", function() {

@@ -1,43 +1,22 @@
-let url = "http://45.79.202.219:3000/pattern"
 class Pattern {
 
-    static setToDefaults(pattern) {
-        pattern.width = 25;
-        pattern.height = 25;
-        pattern.author = "Dayton Dynamic Languages";
-        pattern.name = "Default start pattern";
+    static defaultPattern() {
+        let result = new Pattern();
+        result.width = 25;
+        result.height = 25;
+        result.author = "Dayton Dynamic Languages";
+        result.name = "Default start pattern";
         let boolRows = [];
-        for (let i = 0; i < pattern.width; i++) { boolRows.push(0); };
-        pattern.boolRows = [...boolRows];
-        return pattern;
+        for (let i = 0; i < result.height; i++) { boolRows.push(0); };
+        result.boolRows = [...boolRows];
+        return result;
     }
 
-    static load(patternNumm, tbl) {
-
-        let pattern = new Pattern();
-
+    static load(patternNumm) {
         if (!patternNumm) {
-            Pattern.setToDefaults(pattern);
-            pattern.new_table(tbl);
-            pattern.apply(tbl);
-        } else {
-            // async madness
-            fetch(`${url}?id=eq.${patternNumm}`)
-                .then(response => response.json())
-                .then(data => { 
-                    console.log(`Got pattern data from API: ${JSON.stringify(data)}`)
-                    let row = data[0];
-                    pattern.author = row['author'];
-                    pattern.name = `pattern ${patternNumm}`
-                    pattern.width = row['width']
-                    pattern.boolRows = row['pattern'];
-                    pattern.new_table(tbl);
-                    pattern.apply(tbl);
-                    console.log("Finished setting pattern attributes from API")
-                }) 
+            return Pattern.defaultPattern();
         }
-
-        return pattern;
+        return Pattern.defaultPattern();  // replace me
     }
 
     static random() {
@@ -88,7 +67,7 @@ class Pattern {
                 cell.addEventListener("click", function() {
                     toggle(this);
                     let table = this.closest("table");
-                    table.pattern.update(table);
+                    table.pattern.updateFromTable(table);
                 })
             }
         }
@@ -105,7 +84,7 @@ class Pattern {
         }
     }
 
-    update(tbl) {
+    updateFromTable(tbl) {
         let boolRows = [];
         for (const row of tbl.rows) {
             let characters = "0b";
@@ -115,6 +94,12 @@ class Pattern {
             boolRows.push(Number(characters))
         }
         this.boolRows = boolRows;
+    }
+
+    clear() {
+        let boolRows = [];
+        for (let i = 0; i < this.height; i++) { boolRows.push(0); };
+        this.boolRows = [...boolRows];
     }
 
     static from_table(tbl) {
@@ -202,9 +187,6 @@ function save() {
         headers: { "Content-type": "application/json; charset=UTF-8" }
     }
 
-    fetch(url, options).then(res => window.location.href="gallery.html"); 
-    // console.log("POST result: " + res));
-    // console.log("redirecting now");
-    // window.location.href="gallery.html";
+    fetch(url, options).then(res => console.log(res));
 }
 

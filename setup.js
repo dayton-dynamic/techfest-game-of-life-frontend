@@ -28,7 +28,7 @@ function save(pattern, destination) {
 
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let rules = [
-    [0, 0, 0, 1, 1, 1, 1, 1, 1], // Empty cells with 3 or more neighbors come to life
+    [0, 0, 0, 1, 0, 0, 0, 0, 0], // Empty cells with 3 or more neighbors come to life
     [0, 0, 1, 1, 0, 0, 0, 0, 0]  // Living cells survive if they have 2-3 neighbors
 ];
 let pattern = {};
@@ -163,5 +163,4 @@ window.addEventListener("load", function(){
     });
 
 });
-
 

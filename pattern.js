@@ -26,11 +26,20 @@ class Pattern {
     get rows() {
         // translates the boolRows into 011001 string representation
 
-        let result = []
+        let result = [];
         for (const boolRow of this.boolRows) {
             result.push(boolRow.toString(2).padStart(this.width, '0'))
         }
         return result
+    }
+
+    isEmpty() {
+
+        let total = 0;
+        for (const boolRow of this.boolRows) {
+            total += boolRow;
+        }
+        return (total == 0);
     }
 
     countNeighbors(rowNum, colNum) {

@@ -26,6 +26,18 @@ function save(pattern, destination) {
     }
 }
 
+function eventStopClick() {
+    running = false;
+    clearInterval(runner);
+    document.querySelector("#start").disabled = false;
+    document.querySelector("#stop").disabled = true;
+    document.querySelector("#step").disabled = false;
+    document.querySelector("#reset").disabled = false;
+    document.querySelector("#clear").disabled = false;
+    document.querySelector("#save").disabled = false;
+    document.querySelector("#load").disabled = false;
+};
+
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let rules = [
     [0, 0, 0, 1, 0, 0, 0, 0, 0], // Empty cells with 3 or more neighbors come to life
@@ -63,6 +75,9 @@ window.addEventListener("load", function(){
         runner = setInterval(() => {
             pattern.advance(tbl);
             pattern.apply(tbl);
+            if (pattern.isEmpty()) {
+                eventStopClick();
+            }
         }, interval);
         document.querySelector("#stop").disabled = false;
         document.querySelector("#step").disabled = true;
@@ -72,17 +87,7 @@ window.addEventListener("load", function(){
         document.querySelector("#load").disabled = true;
         this.disabled = true;
     });
-    document.querySelector("#stop").addEventListener("click", function() {
-        running = false;
-        clearInterval(runner);
-        document.querySelector("#start").disabled = false;
-        document.querySelector("#step").disabled = false;
-        document.querySelector("#reset").disabled = false;
-        document.querySelector("#clear").disabled = false;
-        document.querySelector("#save").disabled = false;
-        document.querySelector("#load").disabled = false;
-        this.disabled = true;
-    });
+    document.querySelector("#stop").addEventListener("click", eventStopClick);
     document.querySelector("#step").addEventListener("click", function() {
         pattern.advance(tbl);
         pattern.apply(tbl);

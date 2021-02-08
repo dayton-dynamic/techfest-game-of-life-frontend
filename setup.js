@@ -23,6 +23,7 @@ function save(pattern, destination) {
     }
     else {
         alert("Saving remote");
+        pattern.save_to_web();
     }
 }
 
@@ -31,8 +32,8 @@ let rules = [
     [0, 0, 0, 1, 1, 1, 1, 1, 1], // Empty cells with 3 or more neighbors come to life
     [0, 0, 1, 1, 0, 0, 0, 0, 0]  // Living cells survive if they have 2-3 neighbors
 ];
-let pattern = {};
-let startPattern = {};
+// let pattern = {};
+// let startPattern = {};
 let running = false;
 let runner; // Interval timer
 let interval = 500; // Interval time
@@ -41,12 +42,14 @@ let authorRE = /^[a-zA-Z][a-zA-Z\s]{1,19}$/;
 let nameInvalid = "The Pattern Name must be 2 to 20 characters (letters, numbers or spaces).";
 let authorInvalid = "The Author First Name must be 2 to 20 characters (letters or spaces).";
 
-patternNum = getPatternNum();
-pattern = Pattern.load(patternNum);
 startPattern = Pattern.defaultPattern();
-startPattern.width = pattern.width;
-startPattern.height = pattern.height;
-startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
+patternNum = getPatternNum();
+
+pattern = Pattern.defaultPattern(); 
+load_pattern(pattern, patternNum);
+
+startPattern = Pattern.defaultPattern();
+load_pattern(startPattern, patternNum);
 
 window.addEventListener("load", function(){
     let tbl = document.querySelector("#gameboard");

@@ -1,3 +1,5 @@
+let url = "http://45.79.202.219:3000/pattern";
+
 class Pattern {
 
     static defaultPattern() {
@@ -10,13 +12,6 @@ class Pattern {
         for (let i = 0; i < result.height; i++) { boolRows.push(0); };
         result.boolRows = [...boolRows];
         return result;
-    }
-
-    static load(patternNumm) {
-        if (!patternNumm) {
-            return Pattern.defaultPattern();
-        }
-        return Pattern.defaultPattern();  // replace me
     }
 
     static random() {
@@ -59,6 +54,7 @@ class Pattern {
 
     new_table(tbl) {
         tbl.pattern = this;
+        this.tbl = tbl;
         tbl.innerHTML = "";
         for (const row_values of this.rows) {
             let row = tbl.insertRow();
@@ -75,6 +71,7 @@ class Pattern {
 
     new_thumb(tbl) {
         tbl.pattern = this;
+        this.tbl = tbl;
         tbl.innerHTML = "";
         for (const row_values of this.rows) {
             let row = tbl.insertRow();
@@ -171,22 +168,39 @@ class Pattern {
             "width": this.width
         }
     }
+
+    save_to_web() {
+
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(this.payload),
+            headers: { "Content-type": "application/json; charset=UTF-8" }
+        }
+
+        fetch(url, options).then(res => console.log(res));
+
+    }
 }
 
-function save() {
-    if (!startPattern) {
-        startPattern = Pattern.from_table(document.getElementById("gameboard"));
-    }
-    startPattern.author = prompt("Your name?")
-    console.log(startPattern.payload);
-    let url = "http://45.79.202.219:3000/pattern"
+function load_pattern(patt, patternNum) {
 
-    const options = {
-        method: 'POST',
-        body: JSON.stringify(startPattern.payload),
-        headers: { "Content-type": "application/json; charset=UTF-8" }
+    if (!patternNum) {
+        return;
     }
 
-    fetch(url, options).then(res => console.log(res));
+    fetch(url + "?id=eq." + patternNum)
+        .then(response => response.json())
+        .then(data => 
+            {
+            patt.width = data[0].width; 
+            patt.boolRows = data[0].pattern;
+            patt.height = pattern.boolRows.length; 
+            patt.author = data[0].author;
+            patt.name = data[0].name; 
+            if (patt.tbl) {
+                patt.apply(patt.tbl);
+            }
+            }
+        );
+
 }
-

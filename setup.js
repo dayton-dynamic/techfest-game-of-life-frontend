@@ -58,11 +58,21 @@ function loadPattern(patt, patternNum, source) {
                 if (thumb != null) {
                     pattern.apply(thumb);
                 }
+                if (!pattern.isEmpty()) {
+                    let clearButton = document.querySelector("#clear");
+                    if (clearButton != null) {
+                        clearButton.disabled = false;
+                    }
+                    let saveButton = document.querySelector("#save");
+                    if (saveButton != null) {
+                        saveButton.disabled = false;
+                    }
+                }
             });
     }
 }
 
-function save(pattern, destination) {
+function savePattern(pattern, destination) {
 
     if (destination == "local") {
         let storedPatterns = [];
@@ -241,7 +251,7 @@ window.addEventListener("load", function() {
             startPattern.author = author;
         }
         if (!(message.innerHTML)) {
-            save(startPattern, destination);
+            savePattern(startPattern, destination);
             document.querySelector("#page-mask").style.display = "none";
             document.querySelector("#save-dialog").style.display = "none";
         }

@@ -1,8 +1,15 @@
 function getPatternNum() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var patternNum = (urlParams.get("pattern"));
+    const patternNum = (urlParams.get("pattern"));
     return patternNum;
+}
+
+function getSource() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const source = (urlParams.get("source"));
+    return source;
 }
 
 function toggle(cell) {
@@ -17,26 +24,85 @@ function toggle(cell) {
     cell.innerHTML = icons[cell.alive];
 }
 
-function save(pattern, destination) {
-    if (destination == "local") {
-        alert("Saving local");
+function loadPattern(patt, patternNum, source) {
+
+    if (source == "local") {
+        let patterns = JSON.parse(localStorage.patterns);
+        patterns.forEach(data => {
+            if (data.id == patternNum) {
+                patt.width = data.width; 
+                patt.boolRows = data.pattern;
+                patt.height = pattern.boolRows.length; 
+                patt.author = data.author;
+                patt.name = data.name; 
+            }
+        });
     }
     else {
-        alert("Saving remote");
+        let url = "http://45.79.202.219:3000/pattern";
+        //fetch(url, options).then(res => console.log(res));
+
+        fetch(url + "?id=eq." + patternNum)
+            .then(response => response.json())
+            .then(data => {
+                patt.width = data[0].width; 
+                patt.boolRows = data[0].pattern;
+                patt.height = pattern.boolRows.length; 
+                patt.author = data[0].author;
+                patt.name = data[0].name; 
+                let tbl = document.querySelector("#gameboard");
+                if (tbl != null) {
+                    pattern.apply(tbl);
+                }
+                let thumb = document.querySelector("#startPattern");
+                if (thumb != null) {
+                    pattern.apply(thumb);
+                }
+            });
     }
 }
 
-function eventStopClick() {
-    running = false;
-    clearInterval(runner);
-    document.querySelector("#start").disabled = false;
-    document.querySelector("#stop").disabled = true;
-    document.querySelector("#step").disabled = false;
-    document.querySelector("#reset").disabled = false;
-    document.querySelector("#clear").disabled = false;
-    document.querySelector("#save").disabled = false;
-    document.querySelector("#load").disabled = false;
-};
+function save(pattern, destination) {
+
+    if (destination == "local") {
+        let storedPatterns = [];
+        let lastId = 0;
+        if (localStorage.patterns) {
+            storedPatterns = JSON.parse(localStorage.patterns);
+            lastIndex = storedPatterns.length - 1;
+            lastId = storedPatterns[lastIndex].hasOwnProperty('id') ? storedPatterns[lastIndex].id : 0;
+        }
+        currentPattern = JSON.parse(JSON.stringify(pattern.payload));
+        currentPattern.id = lastId + 1;
+        currentPattern.created_at = new Date().toISOString();
+        storedPatterns.push(currentPattern);
+        localStorage.patterns = JSON.stringify(storedPatterns);
+        //alert(JSON.stringify(localStorage.patterns));
+    }
+    else {
+        let url = "http://45.79.202.219:3000/pattern"
+    
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(pattern.payload),
+            headers: { "Content-type": "application/json; charset=UTF-8" }
+        }
+    
+        fetch(url, options)
+            .then(response => {
+                 if (!response.ok) {
+                    throw new Error(
+                        'Unexpected response status ${response.status}'
+                    );
+                 }
+            })
+            .catch(error => {
+                console.log("Error while saving pattern:", error);
+                alert("Save failed!");
+            });
+        
+    }
+}
 
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let rules = [
@@ -53,19 +119,30 @@ let authorRE = /^[a-zA-Z][a-zA-Z\s]{1,19}$/;
 let nameInvalid = "The Pattern Name must be 2 to 20 characters (letters, numbers or spaces).";
 let authorInvalid = "The Author First Name must be 2 to 20 characters (letters or spaces).";
 
-patternNum = getPatternNum();
-pattern = Pattern.load(patternNum);
+pattern = Pattern.defaultPattern();
+let patternNum = getPatternNum();
+let source = getSource();
+if (patternNum) {
+    loadPattern(pattern, patternNum, source);
+}
 startPattern = Pattern.defaultPattern();
 startPattern.width = pattern.width;
 startPattern.height = pattern.height;
 startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
 
-window.addEventListener("load", function(){
+window.addEventListener("load", function() {
     let tbl = document.querySelector("#gameboard");
     pattern.new_table(tbl);
     pattern.apply(tbl);
     let thumb = document.querySelector("#startPattern");
     startPattern.new_thumb(thumb);
+    startPattern.apply(thumb);
+    if (!pattern.isEmpty()) {
+        document.querySelector("#clear").disabled = false;
+    }
+    if (!startPattern.isEmpty()) {
+        document.querySelector("#save").disabled = false;
+    }
 
     // Attach event listeners to the buttons on the main screen
     document.querySelector("#start").addEventListener("click", function() {
@@ -76,7 +153,14 @@ window.addEventListener("load", function(){
             pattern.advance(tbl);
             pattern.apply(tbl);
             if (pattern.isEmpty()) {
-                eventStopClick();
+                running = false;
+                clearInterval(runner);
+                document.querySelector("#start").disabled = false;
+                document.querySelector("#stop").disabled = true;
+                document.querySelector("#step").disabled = false;
+                document.querySelector("#reset").disabled = false;
+                document.querySelector("#save").disabled = false;
+                document.querySelector("#load").disabled = false;
             }
         }, interval);
         document.querySelector("#stop").disabled = false;
@@ -87,14 +171,30 @@ window.addEventListener("load", function(){
         document.querySelector("#load").disabled = true;
         this.disabled = true;
     });
-    document.querySelector("#stop").addEventListener("click", eventStopClick);
+    document.querySelector("#stop").addEventListener("click", function() {
+        running = false;
+        clearInterval(runner);
+        document.querySelector("#start").disabled = false;
+        document.querySelector("#stop").disabled = true;
+        document.querySelector("#step").disabled = false;
+        document.querySelector("#reset").disabled = false;
+        document.querySelector("#save").disabled = false;
+        if (!pattern.isEmpty()) {
+            document.querySelector("#clear").disabled = false;
+        }
+        document.querySelector("#load").disabled = false;
+    });
     document.querySelector("#step").addEventListener("click", function() {
         pattern.advance(tbl);
         pattern.apply(tbl);
+        if (pattern.isEmpty()) {
+            document.querySelector("#clear").disabled = true;
+        }
     });
     document.querySelector("#reset").addEventListener("click", function() {
         pattern.boolRows = JSON.parse(JSON.stringify(startPattern.boolRows));
         pattern.apply(tbl);
+        document.querySelector("#clear").disabled = false;
     });
     document.querySelector("#clear").addEventListener("click", function() {
         pattern.clear();
@@ -132,16 +232,16 @@ window.addEventListener("load", function(){
             message.innerHTML = nameInvalid;
         }
         else {
-            pattern.name = name;
+            startPattern.name = name;
         }
         if (!authorRE.test(author)) {
             message.innerHTML = authorInvalid;
         }
         else {
-            pattern.author = author;
+            startPattern.author = author;
         }
         if (!(message.innerHTML)) {
-            save(pattern, destination);
+            save(startPattern, destination);
             document.querySelector("#page-mask").style.display = "none";
             document.querySelector("#save-dialog").style.display = "none";
         }
@@ -153,8 +253,8 @@ window.addEventListener("load", function(){
 
     // Attach event listeners to the buttons on the Load dialog
     document.querySelector("#load-submit").addEventListener("click", function() {
-        document.querySelector("#page-mask").style.display = "none";
-        document.querySelector("#load-dialog").style.display = "none";
+        let source = document.querySelector('input[name="source"]:checked').value;
+        window.location.href = 'gallery.html?source=' + source;
     });
     document.querySelector("#load-cancel").addEventListener("click", function() {
         document.querySelector("#page-mask").style.display = "none";

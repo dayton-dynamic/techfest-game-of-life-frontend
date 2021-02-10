@@ -1,6 +1,3 @@
-let url = "http://45.79.202.219:3000/pattern";
-let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
-
 function getSource() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -11,12 +8,12 @@ function getSource() {
 function fillUl(gameList) {
 
     function addLi(row) {
-        if (!row.hasOwnProperty('id')) return; //FIXME: Remove after testing complete
+        if (!row.hasOwnProperty('id')) return; //FIXME: Remove after old test data is purged
         var li = document.createElement('li');
         gameList.append(li);
         let html = `<a id=id${row['id']} href="index.html?pattern=${row['id']}&source=${getSource()}">`;
-        html = html + `<p>${row['name']}<br> (by ${row['author']})</p>`;
-        html = html + `<div class="startPatternThumb">`;
+        html = html + `<p><span class="name">${row['name']}</span><br><span class="author">by ${row['author']}</span></p>`;
+        html = html + `<div class="start-pattern-thumb">`;
         html = html + `<table class="thumbnail"></table>`;
         html = html + `</div>`;
         html = html + `</a>`;
@@ -35,8 +32,13 @@ function fillUl(gameList) {
         if (localStorage.patterns) {
             storedPatterns = JSON.parse(localStorage.patterns);
         }
-        //alert(JSON.stringify(storedPatterns));
-        storedPatterns.forEach(addLi);
+        if (storedPatterns.length > 0) {
+            storedPatterns.forEach(addLi);
+            document.querySelector('#list').style.display = "block";
+        } else {
+            document.querySelector('#empty').style.display = "block";
+        }
+
     }
     else {
         fetch(url)
@@ -52,7 +54,12 @@ function fillUl(gameList) {
                 }
             })
             .then(data => {
-                data.forEach(addLi);
+                if (data.length > 0) {
+                    data.forEach(addLi);
+                    document.querySelector('#list').style.display = "block";
+                } else {
+                    document.querySelector('#empty').style.display = "block";
+                }
             })
             .catch(error => {
                 console.log("Error while fetching list of patterns:", error);
@@ -61,6 +68,10 @@ function fillUl(gameList) {
     }
 
 }
+
+let url = "http://45.79.202.219:3000/pattern";
+let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
+
 window.addEventListener("load", function() {
     let gameList = document.getElementById("game-list");
     fillUl(gameList);

@@ -24,7 +24,7 @@ function toggle(cell) {
     cell.innerHTML = icons[cell.alive];
 }
 
-function loadPattern(patt, patternNum, source) {
+function loadPattern(patt, startPatt, patternNum, source) {
 
     if (source == "local") {
         let patterns = JSON.parse(localStorage.patterns);
@@ -35,28 +35,45 @@ function loadPattern(patt, patternNum, source) {
                 patt.height = pattern.boolRows.length; 
                 patt.author = data.author;
                 patt.name = data.name; 
+                startPatt.width = data.width; 
+                startPatt.boolRows = data.pattern;
+                startPatt.height = pattern.boolRows.length; 
+                startPatt.author = data.author;
+                startPatt.name = data.name; 
             }
         });
     }
     else {
-        let url = "http://45.79.202.219:3000/pattern";
-        //fetch(url, options).then(res => console.log(res));
-
         fetch(url + "?id=eq." + patternNum)
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok &&
+                    response.headers.get("Content-Type") === "application/json; charset=utf-8") {
+                    return response.json();
+                }
+                else {
+                    throw new Error(
+                        'Unexpected response status ${response.status} or content type'
+                    );
+                }
+            })
             .then(data => {
                 patt.width = data[0].width; 
                 patt.boolRows = data[0].pattern;
                 patt.height = pattern.boolRows.length; 
                 patt.author = data[0].author;
-                patt.name = data[0].name; 
+                patt.name = data[0].name;
+                startPatt.width = data[0].width; 
+                startPatt.boolRows = data[0].pattern;
+                startPatt.height = pattern.boolRows.length; 
+                startPatt.author = data[0].author;
+                startPatt.name = data[0].name; 
                 let tbl = document.querySelector("#gameboard");
                 if (tbl != null) {
-                    pattern.apply(tbl);
+                    patt.apply(tbl);
                 }
                 let thumb = document.querySelector("#startPattern");
                 if (thumb != null) {
-                    pattern.apply(thumb);
+                    startPatt.apply(thumb);
                 }
                 if (!pattern.isEmpty()) {
                     let clearButton = document.querySelector("#clear");
@@ -68,6 +85,10 @@ function loadPattern(patt, patternNum, source) {
                         saveButton.disabled = false;
                     }
                 }
+            })
+            .catch(error => {
+                console.log("Error while fetching pattern:", error);
+                alert("Error while getting pattern!");
             });
     }
 }
@@ -87,17 +108,13 @@ function savePattern(pattern, destination) {
         currentPattern.created_at = new Date().toISOString();
         storedPatterns.push(currentPattern);
         localStorage.patterns = JSON.stringify(storedPatterns);
-        //alert(JSON.stringify(localStorage.patterns));
     }
     else {
-        let url = "http://45.79.202.219:3000/pattern"
-    
         const options = {
             method: 'POST',
             body: JSON.stringify(pattern.payload),
             headers: { "Content-type": "application/json; charset=UTF-8" }
         }
-    
         fetch(url, options)
             .then(response => {
                  if (!response.ok) {
@@ -110,10 +127,10 @@ function savePattern(pattern, destination) {
                 console.log("Error while saving pattern:", error);
                 alert("Save failed!");
             });
-        
     }
 }
 
+let url = "http://45.79.202.219:3000/pattern";
 let icons = { 1: "•", 0: "◦" };  // thank you Stephen Hinton!
 let rules = [
     [0, 0, 0, 1, 0, 0, 0, 0, 0], // Empty cells with 3 or more neighbors come to life
@@ -124,21 +141,21 @@ let startPattern = {};
 let running = false;
 let runner; // Interval timer
 let interval = 500; // Interval time
-let nameRE = /^[a-zA-Z0-9][a-zA-Z0-9\s]{1,19}$/;
-let authorRE = /^[a-zA-Z][a-zA-Z\s]{1,19}$/;
-let nameInvalid = "The Pattern Name must be 2 to 20 characters (letters, numbers or spaces).";
-let authorInvalid = "The Author First Name must be 2 to 20 characters (letters or spaces).";
+let nameRE = /^[a-zA-Z0-9][a-zA-Z0-9\s]{1,14}$/;
+let authorRE = /^[a-zA-Z][a-zA-Z\s]{1,14}$/;
+let nameInvalid = "The Pattern Name must be 2 to 15 characters (letters, numbers or spaces).";
+let authorInvalid = "The Author First Name must be 2 to 15 characters (letters or spaces).";
 
 pattern = Pattern.defaultPattern();
 let patternNum = getPatternNum();
 let source = getSource();
-if (patternNum) {
-    loadPattern(pattern, patternNum, source);
-}
 startPattern = Pattern.defaultPattern();
 startPattern.width = pattern.width;
 startPattern.height = pattern.height;
 startPattern.boolRows = JSON.parse(JSON.stringify(pattern.boolRows));
+if (patternNum) {
+    loadPattern(pattern, startPattern, patternNum, source);
+}
 
 window.addEventListener("load", function() {
     let tbl = document.querySelector("#gameboard");
@@ -278,4 +295,3 @@ window.addEventListener("load", function() {
     });
 
 });
-
